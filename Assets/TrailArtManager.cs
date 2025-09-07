@@ -49,6 +49,9 @@ public class TrailArtManager : MonoBehaviour
     private float lastSpawnTime;
     private ObjectPool<GameObject> trailPool;
     private ObjectPool<GameObject> particlePool;
+
+    private TrailInteractionSystem interactionSystem;
+    private EchoTrailSystem echoSystem;
     
     void Start()
     {
@@ -288,4 +291,48 @@ public class TrailArtManager : MonoBehaviour
         colorPalettes[2].name = "Neon";
         colorPalettes[2].SetupNeonColors();
     }
+
+    // 初期化時に追加
+    void InitializeSystems()
+    {
+        interactionSystem = gameObject.AddComponent<TrailInteractionSystem>();
+        echoSystem = gameObject.AddComponent<EchoTrailSystem>();
+    }
+    
+    // 強化されたトレイルを生成
+    public void SpawnEnhancedTrailAtPosition(Vector3 position, float sizeMultiplier)
+    {
+        GameObject trail = GetTrailFromPool();
+        if (trail == null) return;
+        
+        trail.transform.position = position;
+        trail.SetActive(true);
+        
+        TrailRenderer renderer = trail.GetComponent<TrailRenderer>();
+        renderer.startWidth *= sizeMultiplier;
+        renderer.endWidth *= sizeMultiplier;
+        
+        // 強化エフェクトの色
+        Color enhancedColor = renderer.material.color;
+        enhancedColor = Color.Lerp(enhancedColor, Color.white, 0.3f);
+        enhancedColor.a = 1f;
+        renderer.material.color = enhancedColor;
+        
+        TrailController controller = trail.GetComponent<TrailController>();
+        controller.StartTrail();
+        
+        // システムに登録
+        interactionSystem.RegisterTrail(controller);
+        echoSystem.CreateEchoesForTrail(controller);
+        
+        activeTrails.Add(controller);
+    }
+    
+    // プールからトレイルを取得
+    public GameObject GetTrailFromPool()
+    {
+        return trailPool.Get();
+    }
+    
+    
 }
