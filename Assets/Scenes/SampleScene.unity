@@ -538,7 +538,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183124596}
   serializedVersion: 8
-  lengthInSec: 10
+  lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -5335,7 +5335,7 @@ MonoBehaviour:
     useAdditiveBlending: 1
   maxConcurrentTrails: 14
   colorPalettes:
-  - {fileID: 11400000, guid: cebad6d18c0114fe5863388468625794, type: 2}
+  - {fileID: 11400000, guid: b26fc8ece969d41d98055108b92bafab, type: 2}
   currentPaletteIndex: 20
   continuousSpawn: 0
   spawnInterval: 0.007
