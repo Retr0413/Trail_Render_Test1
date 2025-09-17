@@ -4,21 +4,17 @@ using System.Collections;
 
 public class Trail3DManager : MonoBehaviour
 {
-    [Header("自動生成設定")]
+    [Header("2D川流れ設定")]
     [Tooltip("自動でトレイルを生成するかどうか")]
     [SerializeField] private bool enableAutoGeneration = true;
-    [Tooltip("トレイルを生成するY座標")]
-    [SerializeField] private float generationYPosition = 0f;
-    [Tooltip("X座標の最小値")]
-    [SerializeField] private float generationXMin = -5f;
-    [Tooltip("X座標の最大値")]
-    [SerializeField] private float generationXMax = 5f;
+    [Tooltip("川の流れを生成するY座標のリスト")]
+    [SerializeField] private float[] riverYPositions = { -3f, -1f, 1f, 3f };
     [Tooltip("Z座標の最小値")]
     [SerializeField] private float generationZMin = -5f;
     [Tooltip("Z座標の最大値")]
     [SerializeField] private float generationZMax = 5f;
-    [Tooltip("1秒あたりの生成数")]
-    [SerializeField] private float generationSpeed = 1f;
+    [Tooltip("川の生成間隔（秒）")]
+    [SerializeField] private float riverSpawnInterval = 0.5f;
     private float nextGenerationTime = 0f;
     
     [Header("3D空間設定")]
@@ -244,7 +240,7 @@ public class Trail3DManager : MonoBehaviour
         tr.alignment = LineAlignment.View;
 
         Trail3DController controller = trail.AddComponent<Trail3DController>();
-        controller.Initialize(this, trailLifetime, upwardSpeed);
+        controller.Initialize(this, trailLifetime, 0f);
         
         return trail;
     }
@@ -587,19 +583,56 @@ public class Trail3DManager : MonoBehaviour
     
     void HandleAutoGeneration()
     {
+        if (!enableAutoGeneration) return;
+
         if (Time.time >= nextGenerationTime)
         {
-            // ランダムな位置を生成
-            float randomX = Random.Range(generationXMin, generationXMax);
+            float selectedY = riverYPositions[Random.Range(0, riverYPositions.Length)];
             float randomZ = Random.Range(generationZMin, generationZMax);
-            Vector3 generationPosition = new Vector3(randomX, generationYPosition, randomZ);
-            
-            // トレイルを生成
-            SpawnTrailAt3DPosition(generationPosition);
-            
-            // 次の生成時間を計算
-            nextGenerationTime = Time.time + (1f / generationSpeed);
+            Vector3 generationPosition = new Vector3(-10f, selectedY, randomZ);
+
+            SpawnTrailAt2DPosition(generationPosition, selectedY);
+
+            nextGenerationTime = Time.time + riverSpawnInterval;
         }
+    }
+
+    void SpawnTrailAt2DPosition(Vector3 position, float yPos)
+    {
+        GameObject trail = GetTrailFromPool();
+        if (trail == null) return;
+
+        trail.transform.position = position;
+        trail.SetActive(true);
+
+        Trail3DController controller = trail.GetComponent<Trail3DController>();
+        TrailRenderer renderer = trail.GetComponent<TrailRenderer>();
+
+        controller.Initialize(this, trailLifetime, yPos);
+
+        if (enableFlowers)
+        {
+            controller.SetFlowerSettings(flowerSpawnInterval, flowersPerVine, flowerColorPalette);
+        }
+
+        Gradient selectedGradient = new Gradient();
+
+        if (vineColorPalette != null)
+        {
+            selectedGradient = vineColorPalette.GetRandomGradient();
+        }
+        else if (colorPalettes != null && colorPalettes.Length > 0 && colorPalettes[currentPaletteIndex] != null)
+        {
+            selectedGradient = colorPalettes[currentPaletteIndex].GetRandomGradient();
+        }
+
+        renderer.colorGradient = selectedGradient;
+        renderer.startWidth = 0.8f;
+        renderer.endWidth = 0.3f;
+        renderer.time = trailLength;
+
+        controller.StartTrail(position);
+        activeTrails.Add(controller);
     }
     
     // パレットを外部から設定するメソッド

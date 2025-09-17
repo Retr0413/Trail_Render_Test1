@@ -149,12 +149,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trail3DManager
   enableAutoGeneration: 1
-  generationYPosition: 10
-  generationXMin: -50
-  generationXMax: 50
+  riverYPositions:
+  - -3
+  - -1
+  - 1
+  - 3
   generationZMin: -50
   generationZMax: 50
-  generationSpeed: 20
+  riverSpawnInterval: 0.5
   depthRange: 20
   currentDepth: 0.01
   trailPrefab: {fileID: 488363723}

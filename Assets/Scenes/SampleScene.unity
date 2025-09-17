@@ -206,7 +206,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5297,50 +5297,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d293ff8aa9141487da2ccf2bf487cad5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrailArtManager
-  trailSettings:
-    lifetime: 10
-    fadeStartTime: 1
-    maxTrailPoints: 100
-    widthCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: -1
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: -1
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    baseWidth: 0.7
-    widthVariation: 0.4
-    moveSpeed: 10
-    noiseStrength: 1
-    noiseFrequency: 1
-    rotationSpeed: 30
-    trailMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  riverSettings:
+    riverLength: 200
+    startX: -40
+    endX: 40
+    trailTime: 40
+    minY: -5
+    maxY: 5
+    flowSpeed: 8
+    speedVariation: 0.3
+    waveAmplitude: 1.7
+    waveFrequency: 2
+    irregularity: 1
+    noiseSpeed: 0.5
+    startWidth: 0.1
+    endWidth: 0.01
+    riverMaterial: {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
     useAdditiveBlending: 1
-  maxConcurrentTrails: 14
+  autoGenerateRivers: 1
+  baseSpawnInterval: 0.5
+  maxConcurrentRivers: 1000
+  simultaneousStreams: 20
+  overlapTime: 5
+  streamOffset: 0.3
+  enableMouseDisturbance: 1
+  disturbanceRadius: 10
+  disturbanceStrength: 15
+  vibrationFrequency: 30
   colorPalettes:
-  - {fileID: 11400000, guid: b26fc8ece969d41d98055108b92bafab, type: 2}
+  - {fileID: 11400000, guid: f2846a60c0a39481b80c7f9d8c498460, type: 2}
   currentPaletteIndex: 20
-  continuousSpawn: 0
-  spawnInterval: 0.007
-  particlePrefab: {fileID: 1183124596}
-  enableParticles: 0
+  randomizeColors: 1
 --- !u!4 &1925532117
 Transform:
   m_ObjectHideFlags: 0
